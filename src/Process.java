@@ -77,6 +77,10 @@ public class Process {
         return this.processState == ProcessState.READY;
     }
 
+    public boolean isExecuting() { return this.processState == ProcessState.EXECUTING; }
+
+    public boolean isFinalized() { return this.processState == ProcessState.FINALIZED; }
+
     public boolean requestIO(){
         return Math.random() < this.IORequestProbability;
     }

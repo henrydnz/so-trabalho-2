@@ -8,8 +8,13 @@ public class Simulator {
     private List<Process> processes;
     private int processCount;
 
+    private Process executing;
+
+    private int totalCPUTime;
+
     public Simulator() {
         this.processes = new ArrayList<Process>();
+        this.totalCPUTime = 0;
     }
 
     public void readProcessList(String filename) throws RuntimeException {
@@ -72,7 +77,14 @@ public class Simulator {
 
     public void runRoundRobin(){
         RoundRobin roundRobin = new RoundRobin(processes, 4);
-        roundRobin.run();
+
+        while(roundRobin.getFinalizedProcessCount() < processCount){
+            this.totalCPUTime++;
+            roundRobin.updateExecutingProcess();
+
+            roundRobin.waitForIOEvent();
+        }
+
         int time = roundRobin.getTotalCPUTime();
     }
 
