@@ -1,0 +1,3 @@
+public enum ProcessType {
+    IO_BOUND, CPU_BOUND, BATCH, REAL_TIME, MIXED, INTERACTIVE
+}
