@@ -5,16 +5,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Simulator {
-    private List<Process> processes;
+    private final List<Process> processes;
     private int processCount;
 
-    private Process executing;
-
-    private int totalCPUTime;
+    private int CPUTime;
 
     public Simulator() {
         this.processes = new ArrayList<Process>();
-        this.totalCPUTime = 0;
+
+        this.CPUTime = 0;
+    }
+
+    public ProcessType parseProcessType(String type){
+        switch (type) {
+            case "tempo_real" -> {
+                return ProcessType.REAL_TIME;
+            }
+            case "interativo" -> {
+                return ProcessType.INTERACTIVE;
+            }
+            case "io_bound" -> {
+                return ProcessType.IO_BOUND;
+            }
+            case "misto" -> {
+                return ProcessType.MIXED;
+            }
+            case "cpu_bound" -> {
+                return ProcessType.CPU_BOUND;
+            }
+            case "batch" -> {
+                return ProcessType.BATCH;
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 
     public void readProcessList(String filename) throws RuntimeException {
@@ -27,33 +52,29 @@ public class Simulator {
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                // field_index header_csv:
-                // 0 pid,
-                // 1 nome_processo,
-                // 2 tempo_chegada,
-                // 3 tempo_cpu_total,
-                // 4 prioridade,
-                // 5 tipo_processo,
-                // 6 operacao_es,
-                // 7 probabilidade_es,
-                // 8 media_es,
-                // 9 duracao_es,
-                // 10 fila_sugerida,
-                // 11 quantum_sugerido,
-                // 12 descricao
-
-                int processID = Integer.parseInt(fields[0].trim().substring(1));
-                String processName =  fields[1].trim();
-                int processSystemArriveTime = Integer.parseInt(fields[2].trim());
-                int processCPUTime = Integer.parseInt(fields[3].trim());
+                int pid = Integer.parseInt(fields[0].trim().substring(1));
+                String name = fields[1].trim();
+                int arrivalTime = Integer.parseInt(fields[2].trim());
+                int CPUDuration = Integer.parseInt(fields[3].trim());
                 int priority = Integer.parseInt(fields[4].trim());
+                ProcessType processType = parseProcessType(fields[5].trim());
+                boolean hasIO = Integer.parseInt(fields[6].trim()) == 1;
+                double IOProbability = Double.parseDouble(fields[7].trim());
+                double IOAverage = Double.parseDouble(fields[8].trim());
+                int IODuration = Integer.parseInt(fields[9].trim());
+                ProcessState processState = ProcessState.READY;
+                int suggestedQueue = Integer.parseInt(fields[10].trim());
+                int suggestedQuantum = Integer.parseInt(fields[11].trim());
+                String description = fields[12].trim();
 
-
-                // pega o resto dos fields de acordo com o csv
-                // processando cada um de acordo com o tipo
-                // depois cria o objeto de process com os dados e coloca na lista de processos
-                // atualiza o process count
+                this.processes.add(new Process(
+                        pid, name, description, arrivalTime,
+                        CPUDuration, priority, processType, hasIO, IOProbability,
+                        IOAverage, IODuration, processState, suggestedQueue, suggestedQuantum
+                ));
             }
+
+            this.processCount = this.processes.size();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -74,12 +95,11 @@ public class Simulator {
         }
     }
 
-    public void addNewProcesses(List<Process> ps, RoundRobin rr){
+    private void addNewProcesses(List<Process> ps, RoundRobin rr){
         for(int i = 0; i < ps.size(); i++){
-            Process p = ps.get(i);
-            if(p.getSystemArrivalTime() <= this.totalCPUTime){
-                ps.remove(p);
-                rr.addReadyProcess(p);
+            Process process = ps.get(i);
+            if(process.getSystemArrivalTime() <= this.CPUTime){
+                rr.addReadyProcess(process);
             }
         }
     }
@@ -87,15 +107,33 @@ public class Simulator {
     public void runRoundRobin(){
         RoundRobin roundRobin = new RoundRobin(4);
 
-        for(;!roundRobin.hasFinished(processCount);this.totalCPUTime++) {
+        while(roundRobin.getFinishedProcesses().size() != processCount) {
+
             addNewProcesses(this.processes, roundRobin);
-            roundRobin.updateExecutingProcess();
-            roundRobin.waitForIOEvent();
+
+            this.CPUTime++;
+
+            roundRobin.updateExecutingProcess(this.CPUTime);
+            roundRobin.waitForIOEvent(this.CPUTime);
+        }
+
+        System.out.println("finished processes:");
+        for(Process p : roundRobin.getFinishedProcesses()){
+            System.out.print("p"+p.getProcessID()+", ");
         }
     }
 
     public void runMultilevelQueue(){
 
+    }
+
+    public void showProcesses(){
+        for(Process p : processes)
+            System.out.println(p);
+    }
+
+    public int getCPUTime() {
+        return CPUTime;
     }
 
     //    public void runNewAlg(){

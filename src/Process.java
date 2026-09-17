@@ -1,30 +1,32 @@
 public class Process {
-    private int processID;
-    private String processName;
-    private String processDescription;
+    private final int processID;
+    private final String processName;
+    private final String processDescription;
 
-    private int systemArrivalTime;
-    private int CPUDuration;
+    private final int systemArrivalTime;
+    private final int CPUDuration;
 
     private int remainingTime;
 
-    private int priority;
-    private ProcessType type;
+    private final int priority;
+    private final ProcessType type;
 
-    private boolean IOEvent;
-    private double IORequestProbability;
-    private int IORequestAverage;
+    private final boolean IOEvent;
+    private final double IORequestProbability;
+    private final double IORequestAverage;
 
-
-    private int IODuration;
+    private final int IODuration;
     private int IORemainingTime;
 
     private ProcessState processState;
 
+    private final int suggestedQueue;
+    private final int suggestedQuantum;
+
     public Process(int processID, String processName, String processDescription,
                    int systemArrivalTime, int CPUDuration, int priority, ProcessType type,
-                   boolean IOEvent, double IORequestProbability, int IORequestAverage,
-                   int IODuration, ProcessState processState) {
+                   boolean IOEvent, double IORequestProbability, double IORequestAverage,
+                   int IODuration, ProcessState processState, int suggestedQueue, int suggestedQuantum) {
 
         this.processID = processID;
         this.processName = processName;
@@ -45,6 +47,9 @@ public class Process {
 
         this.remainingTime = CPUDuration;
         this.IORemainingTime = IODuration;
+
+        this.suggestedQueue = suggestedQueue;
+        this.suggestedQuantum = suggestedQuantum;
     }
 
     public void execute(){
@@ -55,145 +60,72 @@ public class Process {
         if(this.IORemainingTime > 0 && isWaiting()) this.IORemainingTime--;
     }
 
-    public boolean isDone(){
-        return this.remainingTime == 0;
-    }
+    public boolean isDone(){ return this.remainingTime <= 0; }
 
-    public boolean IOHasArrived(){
-        return this.IORemainingTime == 0;
-    }
+    public boolean requestIO(){ return Math.random() < this.IORequestProbability; }
+
+    public boolean IOHasArrived(){ return this.IORemainingTime <= 0; }
 
     public void resetIO(){ this.IORemainingTime = this.IODuration; }
 
     public boolean isWaiting() { return this.processState == ProcessState.WAITING; }
-
-    public boolean isBlocked(){
-        return this.processState == ProcessState.BLOCKED;
-    }
-
-    public boolean isReady(){
-        return this.processState == ProcessState.READY;
-    }
-
+    public boolean isBlocked(){ return this.processState == ProcessState.BLOCKED; }
+    public boolean isReady(){ return this.processState == ProcessState.READY; }
     public boolean isExecuting() { return this.processState == ProcessState.EXECUTING; }
-
     public boolean isFinalized() { return this.processState == ProcessState.FINALIZED; }
 
-    public boolean requestIO(){
-        return Math.random() < this.IORequestProbability;
+    public int getProcessID() { return processID; }
+    public String getProcessName() { return processName; }
+    public String getProcessDescription() { return processDescription; }
+
+    public int getSystemArrivalTime() { return systemArrivalTime; }
+
+    public int getCPUDuration() { return CPUDuration; }
+
+    public int getRemainingTime() { return remainingTime; }
+    public void setRemainingTime(int remainingTime) { this.remainingTime = remainingTime; }
+
+    public int getPriority() { return priority; }
+
+    public ProcessType getType() { return type; }
+
+    public boolean hasIOEvent() { return IOEvent; }
+
+    public double getIORequestProbability() { return IORequestProbability; }
+
+    public double getIORequestAverage() { return IORequestAverage; }
+
+    public int getIODuration() { return IODuration; }
+
+    public int getIORemainingTime() { return IORemainingTime; }
+    public void setIORemainingTime(int IORemainingTime) { this.IORemainingTime = IORemainingTime; }
+
+    public ProcessState getProcessState() { return processState; }
+    public void setProcessState(ProcessState processState) { this.processState = processState; }
+
+    public int getSuggestedQueue() { return suggestedQueue; }
+
+    public int getSuggestedQuantum() { return suggestedQuantum; }
+
+    @Override
+    public String toString() {
+        return "Process{" +
+                "processID=" + processID +
+                ", processName='" + processName + '\'' +
+                ", processDescription='" + processDescription + '\'' +
+                ", systemArrivalTime=" + systemArrivalTime +
+                ", CPUDuration=" + CPUDuration +
+                ", remainingTime=" + remainingTime +
+                ", priority=" + priority +
+                ", type=" + type +
+                ", IOEvent=" + IOEvent +
+                ", IORequestProbability=" + IORequestProbability +
+                ", IORequestAverage=" + IORequestAverage +
+                ", IODuration=" + IODuration +
+                ", IORemainingTime=" + IORemainingTime +
+                ", processState=" + processState +
+                ", suggestedQueue=" + suggestedQueue +
+                ", suggestedQuantum=" + suggestedQuantum +
+                '}';
     }
-
-    public int getProcessID() {
-        return processID;
-    }
-
-    public void setProcessID(int processID) {
-        this.processID = processID;
-    }
-
-    public String getProcessName() {
-        return processName;
-    }
-
-    public void setProcessName(String processName) {
-        this.processName = processName;
-    }
-
-    public String getProcessDescription() {
-        return processDescription;
-    }
-
-    public void setProcessDescription(String processDescription) {
-        this.processDescription = processDescription;
-    }
-
-    public int getSystemArrivalTime() {
-        return systemArrivalTime;
-    }
-
-    public void setSystemArrivalTime(int systemArrivalTime) {
-        this.systemArrivalTime = systemArrivalTime;
-    }
-
-    public int getCPUDuration() {
-        return CPUDuration;
-    }
-
-    public void setCPUDuration(int CPUDuration) {
-        this.CPUDuration = CPUDuration;
-    }
-
-    public int getRemainingTime() {
-        return remainingTime;
-    }
-
-    public void setRemainingTime(int remainingTime) {
-        this.remainingTime = remainingTime;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public ProcessType getType() {
-        return type;
-    }
-
-    public void setType(ProcessType type) {
-        this.type = type;
-    }
-
-    public boolean hasIOEvent() {
-        return IOEvent;
-    }
-
-    public void setHasIOEvent(boolean IOEvent) {
-        this.IOEvent = IOEvent;
-    }
-
-    public double getIORequestProbability() {
-        return IORequestProbability;
-    }
-
-    public void setIORequestProbability(double IORequestProbability) {
-        this.IORequestProbability = IORequestProbability;
-    }
-
-    public int getIORequestAverage() {
-        return IORequestAverage;
-    }
-
-    public void setIORequestAverage(int IORequestAverage) {
-        this.IORequestAverage = IORequestAverage;
-    }
-
-    public int getIODuration() {
-        return IODuration;
-    }
-
-    public void setIODuration(int IODuration) {
-        this.IODuration = IODuration;
-    }
-
-    public int getIORemainingTime() {
-        return IORemainingTime;
-    }
-
-    public void setIORemainingTime(int IORemainingTime) {
-        this.IORemainingTime = IORemainingTime;
-    }
-
-    public ProcessState getProcessState() {
-        return processState;
-    }
-
-    public void setProcessState(ProcessState processState) {
-        this.processState = processState;
-    }
-
-
 }
