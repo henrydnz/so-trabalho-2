@@ -74,18 +74,24 @@ public class Simulator {
         }
     }
 
+    public void addNewProcesses(List<Process> ps, RoundRobin rr){
+        for(int i = 0; i < ps.size(); i++){
+            Process p = ps.get(i);
+            if(p.getSystemArrivalTime() <= this.totalCPUTime){
+                ps.remove(p);
+                rr.addReadyProcess(p);
+            }
+        }
+    }
 
     public void runRoundRobin(){
-        RoundRobin roundRobin = new RoundRobin(processes, 4);
+        RoundRobin roundRobin = new RoundRobin(4);
 
-        while(roundRobin.getFinalizedProcessCount() < processCount){
-            this.totalCPUTime++;
+        for(;!roundRobin.hasFinished(processCount);this.totalCPUTime++) {
+            addNewProcesses(this.processes, roundRobin);
             roundRobin.updateExecutingProcess();
-
             roundRobin.waitForIOEvent();
         }
-
-        int time = roundRobin.getTotalCPUTime();
     }
 
     public void runMultilevelQueue(){

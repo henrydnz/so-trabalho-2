@@ -48,13 +48,11 @@ public class Process {
     }
 
     public void execute(){
-        if(this.remainingTime > 0 && processState == ProcessState.EXECUTING)
-            this.remainingTime--;
+        if(this.remainingTime > 0 && isExecuting()) this.remainingTime--;
     }
 
     public void waitForIO(){
-        if(this.IORemainingTime > 0 && processState == ProcessState.BLOCKED)
-            this.IORemainingTime--;
+        if(this.IORemainingTime > 0 && isWaiting()) this.IORemainingTime--;
     }
 
     public boolean isDone(){
@@ -65,9 +63,9 @@ public class Process {
         return this.IORemainingTime == 0;
     }
 
-    public void resetIO(){
-        this.IORemainingTime = this.IODuration;
-    }
+    public void resetIO(){ this.IORemainingTime = this.IODuration; }
+
+    public boolean isWaiting() { return this.processState == ProcessState.WAITING; }
 
     public boolean isBlocked(){
         return this.processState == ProcessState.BLOCKED;
