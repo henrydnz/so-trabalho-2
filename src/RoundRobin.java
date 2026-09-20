@@ -125,5 +125,8 @@ public class RoundRobin {
     public List<Process> getFinishedProcesses() { return finished; }
     public List<Process> getBlockedProcesses() { return blocked; }
 
+    public Process getExecutingProcess() { return executing; }
+    Process getWaitingProcess() { return waiting; }
+
     public List<SchedulerEvent> getLog() { return log; }
 }
