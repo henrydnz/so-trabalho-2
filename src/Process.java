@@ -60,7 +60,7 @@ public class Process {
         if(this.IORemainingTime > 0 && isWaiting()) this.IORemainingTime--;
     }
 
-    public boolean isDone(){ return this.remainingTime <= 0; }
+    public boolean isDone(){ return this.remainingTime == 0; }
 
     public boolean requestIO(){ return Math.random() < this.IORequestProbability; }
 
@@ -72,7 +72,7 @@ public class Process {
     public boolean isBlocked(){ return this.processState == ProcessState.BLOCKED; }
     public boolean isReady(){ return this.processState == ProcessState.READY; }
     public boolean isExecuting() { return this.processState == ProcessState.EXECUTING; }
-    public boolean isFinalized() { return this.processState == ProcessState.FINALIZED; }
+    public boolean isFinalized() { return this.processState == ProcessState.FINISHED; }
 
     public int getProcessID() { return processID; }
     public String getProcessName() { return processName; }

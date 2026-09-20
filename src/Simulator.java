@@ -95,32 +95,36 @@ public class Simulator {
         }
     }
 
-    private void addNewProcesses(List<Process> ps, RoundRobin rr){
-        for(int i = 0; i < ps.size(); i++){
+    private int addNewProcesses(List<Process> ps, RoundRobin rr, int lastProcessAddedIndex){
+        for (int i = lastProcessAddedIndex; i < ps.size(); i++) {
             Process process = ps.get(i);
-            if(process.getSystemArrivalTime() <= this.CPUTime){
+            if(process.getSystemArrivalTime() == this.CPUTime) {
                 rr.addReadyProcess(process);
+                lastProcessAddedIndex = i;
             }
         }
+
+        return lastProcessAddedIndex;
     }
 
     public void runRoundRobin(){
+        int lastProcessAddedIndex = 0;
         RoundRobin roundRobin = new RoundRobin(4);
 
         while(roundRobin.getFinishedProcesses().size() != processCount) {
-
-            addNewProcesses(this.processes, roundRobin);
-
+            lastProcessAddedIndex = addNewProcesses(this.processes, roundRobin, lastProcessAddedIndex);
             this.CPUTime++;
-
             roundRobin.updateExecutingProcess(this.CPUTime);
             roundRobin.waitForIOEvent(this.CPUTime);
         }
 
-        System.out.println("finished processes:");
-        for(Process p : roundRobin.getFinishedProcesses()){
-            System.out.print("p"+p.getProcessID()+", ");
-        }
+        StatisticsCalculator calculator = new StatisticsCalculator();
+
+        SimulationSummary summary = calculator.calculate(roundRobin.getLog(), this.processes);
+        List<GanttEntry> gantt = calculator.buildGanttChart(roundRobin.getLog(), this.processes);
+
+        summary.printReport();
+        summary.printGanttChart(gantt);
     }
 
     public void runMultilevelQueue(){

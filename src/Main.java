@@ -6,8 +6,6 @@ public class Main {
 
         simulator.readProcessList(processListFilename);
 
-        simulator.showProcesses();
-
         simulator.runRoundRobin();
 
         System.out.println("total cpu time: " + simulator.getCPUTime() + " TU");

@@ -1,21 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 
-//  BUGS:
-//  finished acaba com processos repetidos
-//  processos marcados como waiting não mudam estado pra waiting
-//  precisa saber se o pipeline ta certo
-
 public class RoundRobin {
     private final List<Process> ready;
     private final List<Process> finished;
     private final List<Process> blocked;
+
+    private final List<SchedulerEvent> log;
 
     private Process executing;
     private Process waiting;
 
     private final int quantum;
     private int currentQuantum;
+
 
     public RoundRobin(int quantum) {
         this.executing = null;
@@ -25,97 +23,107 @@ public class RoundRobin {
         this.finished = new ArrayList<>();
         this.blocked = new ArrayList<>();
 
+        this.log = new ArrayList<>();
+
         this.quantum = quantum;
         this.currentQuantum = 0;
     }
 
     public void addReadyProcess(Process process) {
-        if(this.ready.contains(process) ||
-                process.getProcessState() == ProcessState.EXECUTING ||
-                process.getProcessState() == ProcessState.FINALIZED ||
-                process.getProcessState() == ProcessState.BLOCKED) return;
-
-        process.setProcessState(ProcessState.READY);
+        if(ready.contains(process)) return;
         ready.add(process);
     }
 
     public void blockProcess(Process process){
         process.setProcessState(ProcessState.BLOCKED);
-        this.blocked.add(process);
+        blocked.add(process);
     }
 
     public void finalizeProcess(Process process){
-        process.setProcessState(ProcessState.FINALIZED);
-        this.finished.add(process);
+        process.setProcessState(ProcessState.FINISHED);
+        finished.add(process);
+    }
+
+    public void preemptProcess(Process process){
+        process.setProcessState(ProcessState.READY);
+        ready.add(process);
     }
 
     private void getNextProcess(){
-        this.executing = this.ready.removeFirst();
-        this.executing.setProcessState(ProcessState.EXECUTING);
-    }
-
-    public void updateExecutingProcess(int CPUTime){
-        if(this.executing == null) {
-            if(this.ready.isEmpty()) return; // sem processos pra executar...
-            getNextProcess();
-        }
-
-        this.executing.execute();
-
-        System.out.println("executed p"+this.executing.getProcessID()+" - time: "+CPUTime);
-
-        this.currentQuantum++;
-
-        if(this.executing.isDone()) {
-            System.out.println("finalized p"+this.executing.getProcessID()+" - time: "+CPUTime);
-            finalizeProcess(this.executing);
-            this.executing = null;
-            this.currentQuantum = 0;
-        } else if(this.executing.hasIOEvent() && this.executing.requestIO()) {
-            System.out.println("blocked p"+this.executing.getProcessID()+" - time: "+CPUTime);
-            blockProcess(this.executing);
-            this.executing = null;
-            this.currentQuantum = 0;
-        } else if(this.currentQuantum == this.quantum) {
-            System.out.println("preempted p"+this.executing.getProcessID()+" - time: "+CPUTime);
-            ready.add(this.executing);
-            this.executing = null;
-            this.currentQuantum = 0;
-        }
+        executing = this.ready.removeFirst();
+        executing.setProcessState(ProcessState.EXECUTING);
     }
 
     private void getNextWaitingProcess(){
-        this.waiting = this.blocked.removeFirst();
-        this.waiting.setProcessState(ProcessState.WAITING);
+        waiting = blocked.removeFirst();
+        waiting.setProcessState(ProcessState.WAITING);
     }
 
+    private void unblockProcess(Process process){
+        process.resetIO();
+        process.setProcessState(ProcessState.READY);
+        ready.add(process);
+    }
+
+    private void newLog(Process process, EventType eventType, int time){
+        log.add(new SchedulerEvent(
+                process.getProcessID(),
+                eventType,
+                time,
+                null
+        ));
+    }
+
+    public void updateExecutingProcess(int CPUTime){
+        if(executing == null) {
+            if(ready.isEmpty()) return; // sem processos pra executar...
+            getNextProcess();
+            newLog(executing, EventType.STARTED_EXECUTING, CPUTime);
+        }
+
+        executing.execute();
+        currentQuantum++;
+
+        if(executing.isDone()) {
+            finalizeProcess(executing);
+            newLog(executing, EventType.FINISHED, CPUTime);
+            executing = null;
+            currentQuantum = 0;
+
+        } else if(executing.hasIOEvent() && executing.requestIO()) {
+            blockProcess(executing);
+            newLog(executing, EventType.BLOCKED, CPUTime);
+            executing = null;
+            currentQuantum = 0;
+        } else if(currentQuantum == quantum) {
+            preemptProcess(executing);
+            newLog(executing, EventType.PREEMPTED, CPUTime);
+            executing = null;
+            currentQuantum = 0;
+        }
+    }
+
+    // TRATAMENTO DE E/S:
+    //  - Um processo espera E/S por vez.
+    //  - Processos bloqueados continuam bloqueados até o processo atual receber sua E/S.
     public void waitForIOEvent(int CPUTime){
-        if(this.waiting == null){
-            if(this.blocked.isEmpty()) return;  // nenhum processo espera I/O
+        if(waiting == null){
+            if(blocked.isEmpty()) return;
             getNextWaitingProcess();
         }
 
-        if(!this.waiting.isWaiting()){
-            this.waiting.setProcessState(ProcessState.WAITING);
-        }
+        waiting.waitForIO();
 
-        this.waiting.waitForIO();
-
-//        System.out.println("waiting p"+this.waiting.getProcessID()+" - time: "+CPUTime);
-//        System.out.println("waiting remaining time: " + this.waiting.getIORemainingTime());
-//        System.out.println("state: " + this.waiting.getProcessState());
-
-        if(this.waiting.IOHasArrived()) {
-            System.out.println("unblocked p"+this.waiting.getProcessID()+" - time: "+CPUTime);
-            this.waiting.resetIO();
-            addReadyProcess(this.waiting);
-            this.waiting = null;
+        if(waiting.IOHasArrived()) {
+            unblockProcess(waiting);
+            newLog(waiting, EventType.UNBLOCKED, CPUTime);
+            waiting = null;
         }
     }
-
-    public boolean hasFinished(int processCount){ return finished.size() == processCount; }
 
     public List<Process> getReadyProcesses() { return ready; }
     public List<Process> getFinishedProcesses() { return finished; }
     public List<Process> getBlockedProcesses() { return blocked; }
+
+    public List<SchedulerEvent> getLog() { return log; }
 }
