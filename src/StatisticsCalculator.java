@@ -1,8 +1,16 @@
 import java.util.*;
 
-// calcula as informações sobre a simulação com base nos eventos que foram registrados
+/**
+ * @brief Classe responsável por calcular e compilar os dados analíticos da simulação.
+ */
 public class StatisticsCalculator {
 
+    /**
+     * @brief Calcula as estatísticas gerais e individuais de todos os processos.
+     * @param log Lista de eventos de escalonamento registados.
+     * @param processes Lista de processos a serem avaliados.
+     * @return Um resumo completo (SimulationSummary) com métricas calculadas.
+     */
     public SimulationSummary calculate(List<SchedulerEvent> log, List<Process> processes) {
         List<ProcessStats> statsList = new ArrayList<>();
 
@@ -30,6 +38,12 @@ public class StatisticsCalculator {
         return new SimulationSummary(statsList, avgWaiting, avgTurnaround, avgResponse, totalContextSwitches);
     }
 
+    /**
+     * @brief Calcula as estatísticas detalhadas (turnaround, espera, trocas de contexto) para um único processo.
+     * @param process O processo a ser analisado.
+     * @param log A lista completa de eventos do escalonador.
+     * @return Um objeto ProcessStats contendo todas as métricas isoladas deste processo.
+     */
     private ProcessStats calculateForProcess(Process process, List<SchedulerEvent> log) {
         int pid = process.getProcessID();
 
@@ -80,6 +94,12 @@ public class StatisticsCalculator {
         );
     }
 
+    /**
+     * @brief Constrói os dados necessários para plotar o Gráfico de Gantt da simulação.
+     * @param log Lista de eventos de escalonamento.
+     * @param processes Lista de processos.
+     * @return Uma lista de entradas contendo tempos de CPU contínuos.
+     */
     public List<GanttEntry> buildGanttChart(List<SchedulerEvent> log, List<Process> processes) {
         List<GanttEntry> entries = new ArrayList<>();
 

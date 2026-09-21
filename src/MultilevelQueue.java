@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * @brief Implementa um escalonador de múltiplas filas (Multilevel Queue).
+ */
 public class MultilevelQueue {
     private static final int STARVATION_THRESHOLD = 30;
 
@@ -13,6 +16,12 @@ public class MultilevelQueue {
 
     private RoundRobin activeQueue;
 
+    /**
+     * @brief Construtor para inicializar as três filas Round Robin.
+     * @param quantum01 Quantum de tempo da primeira fila.
+     * @param quantum02 Quantum de tempo da segunda fila.
+     * @param quantum03 Quantum de tempo da terceira fila.
+     */
     public MultilevelQueue(int quantum01, int quantum02, int quantum03) {
         this.queue1 = new RoundRobin(quantum01, 1);
         this.queue2 = new RoundRobin(quantum02, 2);
@@ -21,6 +30,11 @@ public class MultilevelQueue {
         this.activeQueue = null;
     }
 
+    /**
+     * @brief Adiciona um processo à fila adequada com base no seu tipo.
+     * @param process O processo a ser adicionado.
+     * @param currentTime O tempo atual da simulação.
+     */
     public void addProcess(Process process, int currentTime) {
         ProcessType pt = process.getType();
 
@@ -33,6 +47,10 @@ public class MultilevelQueue {
         }
     }
 
+    /**
+     * @brief Executa o ciclo de escalonamento para o tempo atual.
+     * @param currentTime O tempo atual da simulação.
+     */
     public void execute(int currentTime) {
         handleStarvation(currentTime);
 
@@ -49,6 +67,10 @@ public class MultilevelQueue {
         queue3.waitForIOEvent(currentTime);
     }
 
+    /**
+     * @brief Seleciona a próxima fila não vazia para execução.
+     * @return A fila RoundRobin ativa ou null se todas estiverem vazias.
+     */
     private RoundRobin pickNextQueue() {
         if (!queue1.getReadyProcesses().isEmpty()) return queue1;
         if (!queue2.getReadyProcesses().isEmpty()) return queue2;
@@ -57,11 +79,21 @@ public class MultilevelQueue {
         return null;
     }
 
+    /**
+     * @brief Trata a inanição (starvation) promovendo processos antigos.
+     * @param currentTime O tempo atual da simulação.
+     */
     private void handleStarvation(int currentTime) {
         promote(queue3, queue2, currentTime);
         promote(queue2, queue1, currentTime);
     }
 
+    /**
+     * @brief Promove processos de uma fila de menor prioridade para uma de maior prioridade.
+     * @param from A fila de origem.
+     * @param to A fila de destino.
+     * @param currentTime O tempo atual da simulação.
+     */
     private void promote(RoundRobin from, RoundRobin to, int currentTime) {
         List<Process> readySnapshot = new ArrayList<>(from.getReadyProcesses());
 
@@ -78,8 +110,11 @@ public class MultilevelQueue {
         }
     }
 
+
     public int getFinishedCount() {
-        return queue1.getFinishedProcesses().size() + queue2.getFinishedProcesses().size() + queue3.getFinishedProcesses().size();
+        return queue1.getFinishedProcesses().size()
+                + queue2.getFinishedProcesses().size()
+                + queue3.getFinishedProcesses().size();
     }
 
     public List<Process> getFinished(){

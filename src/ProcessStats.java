@@ -1,14 +1,17 @@
-// informações da simulação por processo.
-//      arrival time: tempo em que o processo chega no sistema .
-//      cpu total time: tempo total em que o processo fica na cpu.
-//      first execution time: tempo em que o processo é executado pela 1a vez.
-//      completion time: tempo em que o processo é finalizado
-//      turnaround time: tempo total desde que o processo chegou no sistema até completar
-//      waiting time: tempo total em que o processo ficou esperando na fila de processos prontos (ready).
-//      response time: tempo desde que o processo chegou no sistema até a primeira execução.
-//      context switches: quantidade de vezes em que o processo foi preemptado
-//      total io time: tempo total em que o processo ficou bloqueado esperando E/S
-
+/**
+ * @brief Registro que armazena as métricas finais de simulação para um processo específico.
+ * @param pid ID do processo.
+ * @param processName Nome do processo.
+ * @param arrivalTime Tempo em que o processo chegou ao sistema.
+ * @param cpuTotalTime Tempo total de execução necessário na CPU.
+ * @param firstExecutionTime Tempo em que o processo executou pela primeira vez.
+ * @param completionTime Tempo em que o processo finalizou.
+ * @param turnaroundTime Tempo total decorrido desde a chegada até à finalização.
+ * @param waitingTime Tempo total de espera nas filas de processos prontos.
+ * @param responseTime Tempo desde a chegada até à primeira execução.
+ * @param contextSwitches Número de trocas de contexto sofridas pelo processo.
+ * @param totalIOTime Tempo total bloqueado à espera de E/S.
+ */
 public record ProcessStats(int pid, String processName, int arrivalTime, int cpuTotalTime, int firstExecutionTime,
                            int completionTime, int turnaroundTime, int waitingTime, int responseTime,
                            int contextSwitches, int totalIOTime) {

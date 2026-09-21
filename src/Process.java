@@ -1,3 +1,6 @@
+/**
+ * @brief Representa um processo no sistema operativo.
+ */
 public class Process {
     private final int processID;
     private final String processName;
@@ -23,6 +26,23 @@ public class Process {
     private final int suggestedQueue;
     private final int suggestedQuantum;
 
+    /**
+     * @brief Construtor para inicializar os atributos do processo.
+     * @param processID ID único do processo.
+     * @param processName Nome do processo.
+     * @param processDescription Descrição do comportamento do processo.
+     * @param systemArrivalTime Tempo de chegada ao sistema.
+     * @param CPUDuration Duração total necessária de CPU.
+     * @param priority Prioridade base do processo.
+     * @param type Tipo de processo (ProcessType).
+     * @param IOEvent Indica se o processo faz operações de E/S.
+     * @param IORequestProbability Probabilidade de solicitar E/S a cada ciclo.
+     * @param IORequestAverage Média de pedidos de E/S.
+     * @param IODuration Duração do bloqueio por E/S.
+     * @param processState Estado inicial do processo.
+     * @param suggestedQueue Fila sugerida (se aplicável).
+     * @param suggestedQuantum Quantum sugerido (se aplicável).
+     */
     public Process(int processID, String processName, String processDescription,
                    int systemArrivalTime, int CPUDuration, int priority, ProcessType type,
                    boolean IOEvent, double IORequestProbability, double IORequestAverage,
@@ -52,22 +72,44 @@ public class Process {
         this.suggestedQuantum = suggestedQuantum;
     }
 
+    /**
+     * @brief Simula a execução do processo na CPU por um ciclo de relógio.
+     */
     public void execute(){
         if(this.remainingTime > 0 && isExecuting()) this.remainingTime--;
     }
 
+    /**
+     * @brief Simula a espera por uma operação de E/S por um ciclo.
+     */
     public void waitForIO(){
         if(this.IORemainingTime > 0 && isWaiting()) this.IORemainingTime--;
     }
 
+    /**
+     * @brief Verifica se o processo concluiu a sua execução de CPU.
+     * @return Verdadeiro se o tempo restante for zero, falso caso contrário.
+     */
     public boolean isDone(){ return this.remainingTime == 0; }
 
+    /**
+     * @brief Calcula aleatoriamente se o processo deve solicitar E/S neste ciclo.
+     * @return Verdadeiro se o processo bloqueia para E/S, falso caso contrário.
+     */
     public boolean requestIO(){ return Math.random() < this.IORequestProbability; }
 
+    /**
+     * @brief Verifica se o tempo necessário para a operação de E/S foi concluído.
+     * @return Verdadeiro se a operação de E/S finalizou, falso caso contrário.
+     */
     public boolean IOHasArrived(){ return this.IORemainingTime <= 0; }
 
+    /**
+     * @brief Reinicia o contador de tempo de operação de E/S para a sua duração padrão.
+     */
     public void resetIO(){ this.IORemainingTime = this.IODuration; }
 
+    // GETTERS
     public boolean isWaiting() { return this.processState == ProcessState.WAITING; }
     public boolean isBlocked(){ return this.processState == ProcessState.BLOCKED; }
     public boolean isReady(){ return this.processState == ProcessState.READY; }

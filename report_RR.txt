@@ -1,0 +1,60 @@
+=== General ===
+
+Average Waiting Time:   415,46
+Average Turnaround Time:  730,16
+Average Response Time: 67,44
+Total Context Switches: 439
+
+=== Stats per Process ===
+
+PID 1   ServidorAplicacao  | arrivalTime=2    cpuTotalTime=23   firstExecutinTime=3    completionTime=771  | turnaroundTime=769  waitingTime=438  responseTime=1    | contextSwitches=9   totalIOTime=308 
+PID 2   SincronizacaoNuvem | arrivalTime=4    cpuTotalTime=12   firstExecutinTime=7    completionTime=489  | turnaroundTime=485  waitingTime=357  responseTime=3    | contextSwitches=6   totalIOTime=116 
+PID 3   Atualizador        | arrivalTime=7    cpuTotalTime=19   firstExecutinTime=12   completionTime=524  | turnaroundTime=517  waitingTime=383  responseTime=5    | contextSwitches=6   totalIOTime=115 
+PID 4   IDE                | arrivalTime=8    cpuTotalTime=14   firstExecutinTime=16   completionTime=251  | turnaroundTime=243  waitingTime=229  responseTime=8    | contextSwitches=4   totalIOTime=0   
+PID 5   Navegador          | arrivalTime=9    cpuTotalTime=12   firstExecutinTime=20   completionTime=613  | turnaroundTime=604  waitingTime=411  responseTime=11   | contextSwitches=6   totalIOTime=181 
+PID 6   Atualizador        | arrivalTime=12   cpuTotalTime=36   firstExecutinTime=28   completionTime=1328 | turnaroundTime=1316 waitingTime=517  responseTime=16   | contextSwitches=16  totalIOTime=763 
+PID 7   BancoDados         | arrivalTime=15   cpuTotalTime=18   firstExecutinTime=31   completionTime=1252 | turnaroundTime=1237 waitingTime=438  responseTime=16   | contextSwitches=13  totalIOTime=781 
+PID 8   MonitorSistema     | arrivalTime=16   cpuTotalTime=9    firstExecutinTime=32   completionTime=226  | turnaroundTime=210  waitingTime=201  responseTime=16   | contextSwitches=3   totalIOTime=0   
+PID 9   Renderizacao       | arrivalTime=17   cpuTotalTime=66   firstExecutinTime=36   completionTime=890  | turnaroundTime=873  waitingTime=807  responseTime=19   | contextSwitches=17  totalIOTime=0   
+PID 10  IDE                | arrivalTime=18   cpuTotalTime=13   firstExecutinTime=40   completionTime=342  | turnaroundTime=324  waitingTime=311  responseTime=22   | contextSwitches=4   totalIOTime=0   
+PID 11  Impressao          | arrivalTime=18   cpuTotalTime=5    firstExecutinTime=44   completionTime=551  | turnaroundTime=533  waitingTime=361  responseTime=26   | contextSwitches=5   totalIOTime=167 
+PID 12  Criptografia       | arrivalTime=20   cpuTotalTime=42   firstExecutinTime=49   completionTime=738  | turnaroundTime=718  waitingTime=676  responseTime=29   | contextSwitches=11  totalIOTime=0   
+PID 13  ColetorLogs        | arrivalTime=20   cpuTotalTime=15   firstExecutinTime=53   completionTime=867  | turnaroundTime=847  waitingTime=449  responseTime=33   | contextSwitches=8   totalIOTime=383 
+PID 14  IDE                | arrivalTime=22   cpuTotalTime=9    firstExecutinTime=55   completionTime=280  | turnaroundTime=258  waitingTime=249  responseTime=33   | contextSwitches=3   totalIOTime=0   
+PID 15  ControleTemperatura | arrivalTime=24   cpuTotalTime=6    firstExecutinTime=59   completionTime=177  | turnaroundTime=153  waitingTime=147  responseTime=35   | contextSwitches=2   totalIOTime=0   
+PID 16  Chat               | arrivalTime=24   cpuTotalTime=8    firstExecutinTime=63   completionTime=185  | turnaroundTime=161  waitingTime=153  responseTime=39   | contextSwitches=2   totalIOTime=0   
+PID 17  Renderizacao       | arrivalTime=26   cpuTotalTime=56   firstExecutinTime=68   completionTime=850  | turnaroundTime=824  waitingTime=768  responseTime=42   | contextSwitches=14  totalIOTime=0   
+PID 18  BancoDados         | arrivalTime=27   cpuTotalTime=30   firstExecutinTime=72   completionTime=1506 | turnaroundTime=1479 waitingTime=430  responseTime=45   | contextSwitches=19  totalIOTime=1019
+PID 19  DownloadArquivo    | arrivalTime=28   cpuTotalTime=18   firstExecutinTime=74   completionTime=1295 | turnaroundTime=1267 waitingTime=432  responseTime=46   | contextSwitches=13  totalIOTime=817 
+PID 20  BancoDados         | arrivalTime=30   cpuTotalTime=17   firstExecutinTime=81   completionTime=476  | turnaroundTime=446  waitingTime=429  responseTime=51   | contextSwitches=5   totalIOTime=0   
+PID 21  ExportacaoDados    | arrivalTime=33   cpuTotalTime=43   firstExecutinTime=85   completionTime=755  | turnaroundTime=722  waitingTime=679  responseTime=52   | contextSwitches=11  totalIOTime=0   
+PID 22  Alarme             | arrivalTime=34   cpuTotalTime=6    firstExecutinTime=89   completionTime=225  | turnaroundTime=191  waitingTime=185  responseTime=55   | contextSwitches=2   totalIOTime=0   
+PID 23  BackupParcial      | arrivalTime=36   cpuTotalTime=5    firstExecutinTime=97   completionTime=232  | turnaroundTime=196  waitingTime=184  responseTime=61   | contextSwitches=2   totalIOTime=7   
+PID 24  Renderizacao       | arrivalTime=36   cpuTotalTime=34   firstExecutinTime=100  completionTime=683  | turnaroundTime=647  waitingTime=613  responseTime=64   | contextSwitches=9   totalIOTime=0   
+PID 25  ServidorAplicacao  | arrivalTime=37   cpuTotalTime=32   firstExecutinTime=104  completionTime=1571 | turnaroundTime=1534 waitingTime=437  responseTime=67   | contextSwitches=23  totalIOTime=1065
+PID 26  TransferenciaRede  | arrivalTime=38   cpuTotalTime=13   firstExecutinTime=105  completionTime=651  | turnaroundTime=613  waitingTime=396  responseTime=67   | contextSwitches=5   totalIOTime=204 
+PID 27  SincronizacaoNuvem | arrivalTime=40   cpuTotalTime=11   firstExecutinTime=113  completionTime=1069 | turnaroundTime=1029 waitingTime=411  responseTime=73   | contextSwitches=9   totalIOTime=607 
+PID 28  MonitorSistema     | arrivalTime=41   cpuTotalTime=13   firstExecutinTime=114  completionTime=455  | turnaroundTime=414  waitingTime=357  responseTime=73   | contextSwitches=4   totalIOTime=44  
+PID 29  Renderizacao       | arrivalTime=44   cpuTotalTime=35   firstExecutinTime=124  completionTime=903  | turnaroundTime=859  waitingTime=595  responseTime=80   | contextSwitches=11  totalIOTime=229 
+PID 30  LeituraDisco       | arrivalTime=45   cpuTotalTime=6    firstExecutinTime=128  completionTime=804  | turnaroundTime=759  waitingTime=402  responseTime=83   | contextSwitches=6   totalIOTime=351 
+PID 31  Alarme             | arrivalTime=47   cpuTotalTime=3    firstExecutinTime=129  completionTime=131  | turnaroundTime=84   waitingTime=81   responseTime=82   | contextSwitches=1   totalIOTime=0   
+PID 32  Simulacao          | arrivalTime=49   cpuTotalTime=54   firstExecutinTime=136  completionTime=863  | turnaroundTime=814  waitingTime=760  responseTime=87   | contextSwitches=14  totalIOTime=0   
+PID 33  DownloadArquivo    | arrivalTime=49   cpuTotalTime=8    firstExecutinTime=140  completionTime=546  | turnaroundTime=497  waitingTime=341  responseTime=91   | contextSwitches=4   totalIOTime=148 
+PID 34  BancoDados         | arrivalTime=50   cpuTotalTime=21   firstExecutinTime=145  completionTime=561  | turnaroundTime=511  waitingTime=490  responseTime=95   | contextSwitches=6   totalIOTime=0   
+PID 35  EditorTexto        | arrivalTime=51   cpuTotalTime=12   firstExecutinTime=149  completionTime=366  | turnaroundTime=315  waitingTime=303  responseTime=98   | contextSwitches=3   totalIOTime=0   
+PID 36  BancoDados         | arrivalTime=53   cpuTotalTime=12   firstExecutinTime=157  completionTime=1077 | turnaroundTime=1024 waitingTime=404  responseTime=104  | contextSwitches=9   totalIOTime=608 
+PID 37  ProcessamentoLote  | arrivalTime=55   cpuTotalTime=24   firstExecutinTime=158  completionTime=572  | turnaroundTime=517  waitingTime=493  responseTime=103  | contextSwitches=6   totalIOTime=0   
+PID 38  RelatorioMensal    | arrivalTime=55   cpuTotalTime=56   firstExecutinTime=162  completionTime=1562 | turnaroundTime=1507 waitingTime=451  responseTime=107  | contextSwitches=24  totalIOTime=1000
+PID 39  ServidorWeb        | arrivalTime=56   cpuTotalTime=28   firstExecutinTime=163  completionTime=1539 | turnaroundTime=1483 waitingTime=407  responseTime=107  | contextSwitches=20  totalIOTime=1048
+PID 40  ServidorWeb        | arrivalTime=59   cpuTotalTime=30   firstExecutinTime=169  completionTime=1475 | turnaroundTime=1416 waitingTime=417  responseTime=110  | contextSwitches=17  totalIOTime=969 
+PID 41  ControleTemperatura | arrivalTime=60   cpuTotalTime=3    firstExecutinTime=172  completionTime=174  | turnaroundTime=114  waitingTime=111  responseTime=112  | contextSwitches=1   totalIOTime=0   
+PID 42  Impressao          | arrivalTime=61   cpuTotalTime=9    firstExecutinTime=175  completionTime=856  | turnaroundTime=795  waitingTime=392  responseTime=114  | contextSwitches=6   totalIOTime=394 
+PID 43  Navegador          | arrivalTime=62   cpuTotalTime=17   firstExecutinTime=178  completionTime=1047 | turnaroundTime=985  waitingTime=430  responseTime=116  | contextSwitches=9   totalIOTime=538 
+PID 44  PainelUsuario      | arrivalTime=64   cpuTotalTime=13   firstExecutinTime=179  completionTime=950  | turnaroundTime=886  waitingTime=425  responseTime=115  | contextSwitches=8   totalIOTime=448 
+PID 45  ServidorAplicacao  | arrivalTime=65   cpuTotalTime=20   firstExecutinTime=180  completionTime=1149 | turnaroundTime=1084 waitingTime=474  responseTime=115  | contextSwitches=11  totalIOTime=590 
+PID 46  ExportacaoDados    | arrivalTime=67   cpuTotalTime=50   firstExecutinTime=189  completionTime=908  | turnaroundTime=841  waitingTime=536  responseTime=122  | contextSwitches=13  totalIOTime=255 
+PID 47  Renderizacao       | arrivalTime=69   cpuTotalTime=45   firstExecutinTime=193  completionTime=811  | turnaroundTime=742  waitingTime=697  responseTime=124  | contextSwitches=12  totalIOTime=0   
+PID 48  TransferenciaRede  | arrivalTime=71   cpuTotalTime=21   firstExecutinTime=202  completionTime=1448 | turnaroundTime=1377 waitingTime=403  responseTime=131  | contextSwitches=16  totalIOTime=953 
+PID 49  BancoDados         | arrivalTime=71   cpuTotalTime=11   firstExecutinTime=204  completionTime=398  | turnaroundTime=327  waitingTime=316  responseTime=133  | contextSwitches=3   totalIOTime=0   
+PID 50  Indexador          | arrivalTime=73   cpuTotalTime=16   firstExecutinTime=208  completionTime=1034 | turnaroundTime=961  waitingTime=397  responseTime=135  | contextSwitches=8   totalIOTime=548 
+
