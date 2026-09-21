@@ -3,5 +3,6 @@ public enum EventType {
     PREEMPTED,
     BLOCKED,
     UNBLOCKED,
-    FINISHED
+    FINISHED,
+    PROMOTED
 }

@@ -95,11 +95,21 @@ public class Simulator {
         }
     }
 
-    private int addNewProcesses(List<Process> ps, RoundRobin rr, int lastProcessAddedIndex){
+    private void printLog(List<SchedulerEvent> log){
+        StatisticsCalculator calculator = new StatisticsCalculator();
+        SimulationSummary summary = calculator.calculate(log, this.processes);
+        List<GanttEntry> gantt = calculator.buildGanttChart(log, this.processes);
+
+        summary.printReport();
+        System.out.println();
+        summary.printGanttChart(gantt);
+    }
+
+    private int addNewProcessesRR(List<Process> ps, RoundRobin rr, int lastProcessAddedIndex){
         for (int i = lastProcessAddedIndex; i < ps.size(); i++) {
             Process process = ps.get(i);
             if(process.getSystemArrivalTime() == this.CPUTime) {
-                rr.addReadyProcess(process);
+                rr.addReadyProcess(process, this.CPUTime);
                 lastProcessAddedIndex = i;
             }
         }
@@ -112,29 +122,41 @@ public class Simulator {
         RoundRobin roundRobin = new RoundRobin(4);
 
         while(roundRobin.getFinishedProcesses().size() != processCount) {
-            lastProcessAddedIndex = addNewProcesses(this.processes, roundRobin, lastProcessAddedIndex);
+            lastProcessAddedIndex = addNewProcessesRR(this.processes, roundRobin, lastProcessAddedIndex);
             this.CPUTime++;
             roundRobin.updateExecutingProcess(this.CPUTime);
             roundRobin.waitForIOEvent(this.CPUTime);
         }
 
-        StatisticsCalculator calculator = new StatisticsCalculator();
+        printLog(roundRobin.getLog());
+    }
 
-        SimulationSummary summary = calculator.calculate(roundRobin.getLog(), this.processes);
-        List<GanttEntry> gantt = calculator.buildGanttChart(roundRobin.getLog(), this.processes);
-
-        summary.printReport();
-        summary.printGanttChart(gantt);
+    private int addNewProcessesMLQ(List<Process> ps, MultilevelQueue mlq, int lastProcessAddedIndex){
+        for (int i = lastProcessAddedIndex; i < ps.size(); i++) {
+            Process process = ps.get(i);
+            if (process.getSystemArrivalTime() == this.CPUTime) {
+                mlq.addProcess(process, this.CPUTime);
+                lastProcessAddedIndex = i;
+            }
+        }
+        return lastProcessAddedIndex;
     }
 
     public void runMultilevelQueue(){
+        this.CPUTime = 0;
+        int lastProcessAddedIndex = 0;
+        MultilevelQueue mlq = new MultilevelQueue(2, 4, 8);
 
+        while (mlq.getFinishedCount() != processCount) {
+            lastProcessAddedIndex = addNewProcessesMLQ(this.processes, mlq, lastProcessAddedIndex);
+            this.CPUTime++;
+            mlq.execute(this.CPUTime);
+        }
+
+        printLog(mlq.getCombinedLog());
     }
 
-    public void showProcesses(){
-        for(Process p : processes)
-            System.out.println(p);
-    }
+    public void showProcesses(){ for(Process p : processes) System.out.println(p); }
 
     public int getCPUTime() {
         return CPUTime;
