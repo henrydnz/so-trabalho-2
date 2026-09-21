@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,9 +98,13 @@ public class Simulator {
         SimulationSummary summary = calculator.calculate(log, this.processes);
         List<GanttEntry> gantt = calculator.buildGanttChart(log, this.processes);
 
-        summary.printReport();
-        System.out.println();
-        summary.printGanttChart(gantt);
+        try (PrintStream fileOut = new PrintStream(new FileOutputStream("report.txt"))) {
+            summary.printReportFile(fileOut);
+        } catch (IOException e) { throw new RuntimeException(e); }
+
+        try (PrintStream fileOut = new PrintStream(new FileOutputStream("gantt.txt"))) {
+            summary.printGanttChartFile(gantt, fileOut);
+        } catch (IOException e) { throw new RuntimeException(e); }
     }
 
     private int addNewProcessesRR(List<Process> ps, RoundRobin rr, int lastProcessAddedIndex){
@@ -118,6 +120,7 @@ public class Simulator {
     }
 
     public void runRoundRobin(){
+        this.CPUTime = 0;
         int lastProcessAddedIndex = 0;
         RoundRobin roundRobin = new RoundRobin(4);
 
